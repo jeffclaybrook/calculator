@@ -57,7 +57,7 @@ export default function Home() {
     <input
      value={input}
      readOnly
-     className="w-full h-36 p-3 text-end text-6xl"
+     className="w-full h-44 p-3 text-end text-6xl outline-none"
      style={{ color: inputColor }}
     />
     <div className="grid grid-cols-4 gap-3 justify-items-center">

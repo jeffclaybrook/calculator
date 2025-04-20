@@ -1,103 +1,228 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect, useState } from "react"
+import { Dark, Light } from "@/components/icons"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+ const [input, setInput] = useState("0")
+ const [theme, setTheme] = useState<"light" | "dark">("light")
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+ useEffect(() => {
+  const storedTheme = localStorage.getItem("theme")
+  if (storedTheme === "dark") setTheme("dark")
+ }, [])
+
+ useEffect(() => {
+  localStorage.setItem("theme", theme)
+ }, [theme])
+
+ const append = (value: string) => setInput((prev) => (prev === "0" ? value : prev + value))
+
+ const clear = () => setInput("0")
+
+ const calculate = () => {
+  try {
+   const result = eval(input)
+   setInput(String(result))
+  } catch {
+   setInput("Error")
+  }
+ }
+
+ const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"))
+
+ const bgColor = theme === "light" ? "#f1f4fb" : "#202a30"
+ const inputColor = theme === "light" ? "#1b1b1f" : "#e1e3df"
+ const themeButtonColor = theme === "light" ? "#454d54" : "#abb3ba"
+ const numberBgColor = theme === "light" ? "#ffffff" : "#ffffff14"
+ const numberTextColor = theme === "light" ? "#181818" : "#ffffff"
+ const operatorBgColor = theme === "light" ? "#c4e8ff" : "#a8c6ff"
+ const operatorTextColor = theme === "light" ? "#181818" : "#082d6d"
+ const buttonClass = `flex items-center justify-center w-[75px] h-[75px] rounded-full text-3xl shadow-xs cursor-pointer`
+
+ return (
+  <main
+   className="min-h-screen flex items-center justify-center transition-colors duration-300"
+   style={{ backgroundColor: bgColor }}
+  >
+   <div className="flex flex-col gap-4 max-w-md w-full h-screen mx-auto p-4">
+    <button
+     onClick={toggleTheme}
+     aria-label="Toggle theme"
+     className="inline-flex mr-auto p-2 rounded-full transition cursor-pointer"
+     style={{ color: themeButtonColor }}
+    >
+     {theme === "light" ? <Dark className="w-[28px] h-[28px]" /> : <Light className="w-[28px] h-[28px]" />}
+    </button>
+    <input
+     value={input}
+     readOnly
+     className="w-full h-36 p-3 text-end text-6xl"
+     style={{ color: inputColor }}
+    />
+    <div className="grid grid-cols-4 gap-3 justify-items-center">
+     <button
+      onClick={clear}
+      aria-label="Clear"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      C
+     </button>
+     <button
+      onClick={() => append("(")}
+      aria-label="Parentheses open"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"("}
+     </button>
+     <button
+      onClick={() => append(")")}
+      aria-label="Parentheses close"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {")"}
+     </button>
+     <button
+      onClick={() => append("/")}
+      aria-label="Divide"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"÷"}
+     </button>
+     <button
+      onClick={() => append("7")}
+      aria-label="7"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"7"}
+     </button>
+     <button
+      onClick={() => append("8")}
+      aria-label="8"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"8"}
+     </button>
+     <button
+      onClick={() => append("9")}
+      aria-label="9"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"9"}
+     </button>
+     <button
+      onClick={() => append("*")}
+      aria-label="Multiply"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"x"}
+     </button>
+     <button
+      onClick={() => append("4")}
+      aria-label="4"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"4"}
+     </button>
+     <button
+      onClick={() => append("5")}
+      aria-label="5"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"5"}
+     </button>
+     <button
+      onClick={() => append("6")}
+      aria-label="6"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"6"}
+     </button>
+     <button
+      onClick={() => append("+")}
+      aria-label="Add"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"+"}
+     </button>
+     <button
+      onClick={() => append("1")}
+      aria-label="1"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"1"}
+     </button>
+     <button
+      onClick={() => append("2")}
+      aria-label="2"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"2"}
+     </button>
+     <button
+      onClick={() => append("3")}
+      aria-label="3"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"3"}
+     </button>
+     <button
+      onClick={() => append("-")}
+      aria-label="Subtract"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"-"}
+     </button>
+     <button
+      onClick={() => append("%")}
+      aria-label="Percent"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"%"}
+     </button>
+     <button
+      onClick={() => append("0")}
+      aria-label="0"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"0"}
+     </button>
+     <button
+      onClick={() => append(".")}
+      aria-label="Decimal"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: numberBgColor, color: numberTextColor }}
+     >
+      {"."}
+     </button>
+     <button
+      onClick={() => calculate()}
+      aria-label="Equals"
+      className={`${buttonClass}`}
+      style={{ backgroundColor: operatorBgColor, color: operatorTextColor }}
+     >
+      {"="}
+     </button>
     </div>
-  );
+   </div>
+  </main>
+ )
 }
